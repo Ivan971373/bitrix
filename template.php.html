@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>template.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+.s1 { color: #bcbec4;}
+.s2 { color: #d5b778;}
+.s3 { color: #b3ae60;}
+.s4 { color: #bababa;}
+.s5 { color: #6aab73;}
+.s6 { color: #cf8e6d;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+template.php</font>
+</center></td></tr></table>
+<pre><span class="s0">if (!defined(&quot;B_PROLOG_INCLUDED&quot;) || B_PROLOG_INCLUDED !== true) die(); 
+</span>
+<span class="s0">$newsList = []; 
+</span>
+<span class="s0">$newsFilter = [ 
+    'IBLOCK_ID' =&gt; $arParams['IBLOCK_ID_NEWS'], 
+    'ID' =&gt; $arResult['NEWS'], 
+    'ACTIVE' =&gt; 'Y' 
+]; 
+</span>
+<span class="s0">$newsSelect = [ 
+    'ID', 
+    'NAME', 
+    'ACTIVE_FROM' 
+]; 
+</span>
+<span class="s0">$newsResult = CIBlockElement::GetList([], $newsFilter, false, false, $newsSelect); 
+</span>
+<span class="s0">while ($news = $newsResult-&gt;Fetch()) { 
+    $newsList[$news['ID']] = $news; 
+} 
+?&gt; 
+</span>
+<span class="s1">&lt;</span><span class="s2">div </span><span class="s4">class</span><span class="s1">=&quot;</span><span class="s5">catalog</span><span class="s1">&quot;&gt;</span>
+    <span class="s0">&lt;?php </span><span class="s6">foreach </span><span class="s1">($arResult['</span><span class="s5">SECTIONS</span><span class="s1">'] as $section): </span><span class="s0">?&gt;</span>
+        <span class="s1">&lt;</span><span class="s2">h2</span><span class="s1">&gt;</span><span class="s0">&lt;?= </span><span class="s1">$section['</span><span class="s5">NAME</span><span class="s1">'] </span><span class="s0">?&gt;</span><span class="s1">&lt;/</span><span class="s2">h2</span><span class="s1">&gt;</span>
+        <span class="s0">&lt;?php </span><span class="s6">if </span><span class="s1">(!empty($section['</span><span class="s5">UF_NEWS_LINK</span><span class="s1">'])): </span><span class="s0">?&gt;</span>
+            <span class="s1">&lt;</span><span class="s2">div </span><span class="s4">class</span><span class="s1">=&quot;</span><span class="s5">news</span><span class="s1">&quot;&gt;</span>
+                <span class="s1">&lt;</span><span class="s2">h3</span><span class="s1">&gt;</span><span class="s0">Новости:</span><span class="s1">&lt;/</span><span class="s2">h3</span><span class="s1">&gt;</span>
+                <span class="s1">&lt;</span><span class="s2">ul</span><span class="s1">&gt;</span>
+                    <span class="s0">&lt;?php </span><span class="s6">foreach </span><span class="s1">($section['</span><span class="s5">UF_NEWS_LINK</span><span class="s1">'] as $newsId): </span><span class="s0">?&gt;</span>
+                        <span class="s1">&lt;</span><span class="s2">li</span><span class="s1">&gt;</span><span class="s0">&lt;?= </span><span class="s1">$newsList[$newsId]['</span><span class="s5">ACTIVE_FROM</span><span class="s1">'] </span><span class="s0">?&gt; - &lt;?= </span><span class="s1">$newsList[$newsId]['</span><span class="s5">NAME</span><span class="s1">'] </span><span class="s0">?&gt;</span><span class="s1">&lt;/</span><span class="s2">li</span><span class="s1">&gt;</span>
+                    <span class="s0">&lt;?php </span><span class="s6">endforeach</span><span class="s1">; </span><span class="s0">?&gt;</span>
+                <span class="s1">&lt;/</span><span class="s2">ul</span><span class="s1">&gt;</span>
+            <span class="s1">&lt;/</span><span class="s2">div</span><span class="s1">&gt;</span>
+        <span class="s0">&lt;?php </span><span class="s6">endif</span><span class="s1">; </span><span class="s0">?&gt;</span>
+        <span class="s1">&lt;</span><span class="s2">div </span><span class="s4">class</span><span class="s1">=&quot;</span><span class="s5">items</span><span class="s1">&quot;&gt;</span>
+            <span class="s1">&lt;</span><span class="s2">h3</span><span class="s1">&gt;</span><span class="s0">Товары:</span><span class="s1">&lt;/</span><span class="s2">h3</span><span class="s1">&gt;</span>
+            <span class="s1">&lt;</span><span class="s2">ul</span><span class="s1">&gt;</span>
+                <span class="s0">&lt;?php </span><span class="s6">foreach </span><span class="s1">($arResult['</span><span class="s5">ITEMS</span><span class="s1">'][$section['</span><span class="s5">ID</span><span class="s1">']] as $item): </span><span class="s0">?&gt;</span>
+                    <span class="s1">&lt;</span><span class="s2">li</span><span class="s1">&gt;</span><span class="s0">&lt;?= </span><span class="s1">$item['</span><span class="s5">NAME</span><span class="s1">'] </span><span class="s0">?&gt;</span><span class="s1">&lt;/</span><span class="s2">li</span><span class="s1">&gt;</span>
+                <span class="s0">&lt;?php </span><span class="s6">endforeach</span><span class="s1">; </span><span class="s0">?&gt;</span>
+            <span class="s1">&lt;/</span><span class="s2">ul</span><span class="s1">&gt;</span>
+        <span class="s1">&lt;/</span><span class="s2">div</span><span class="s1">&gt;</span>
+    <span class="s0">&lt;?php </span><span class="s6">endforeach</span><span class="s1">; </span><span class="s0">?&gt;</span>
+<span class="s1">&lt;/</span><span class="s2">div</span><span class="s1">&gt;</span></pre>
+</body>
+</html>

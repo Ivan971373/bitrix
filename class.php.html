@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>class.php</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+class.php</font>
+</center></td></tr></table>
+<pre><span class="s0">if (!defined(&quot;B_PROLOG_INCLUDED&quot;) || B_PROLOG_INCLUDED !== true) die(); 
+</span>
+<span class="s0">use Bitrix\Main\Loader; 
+use Bitrix\Iblock\ElementTable; 
+use Bitrix\Iblock\SectionTable; 
+</span>
+<span class="s0">class SimpleCatalogComponent extends CBitrixComponent 
+{ 
+    public function onPrepareComponentParams($params) 
+    { 
+        $params['CACHE_TIME'] = $params['CACHE_TIME'] ?? 36000000; 
+        return $params; 
+    } 
+</span>
+    <span class="s0">public function executeComponent() 
+    { 
+        if ($this-&gt;startResultCache(false, [])) { 
+            if (!Loader::includeModule(&quot;iblock&quot;)) { 
+                $this-&gt;abortResultCache(); 
+                ShowError(&quot;Модуль Информационных блоков не установлен&quot;); 
+                return; 
+            } 
+</span>
+            <span class="s0">$this-&gt;arResult['ITEMS'] = []; 
+            $this-&gt;arResult['SECTIONS'] = []; 
+            $this-&gt;arResult['NEWS'] = []; 
+</span>
+            <span class="s0">$sections = SectionTable::getList([ 
+                'filter' =&gt; ['IBLOCK_ID' =&gt; $this-&gt;arParams['IBLOCK_ID']], 
+                'select' =&gt; ['ID', 'NAME', 'UF_NEWS_LINK'] 
+            ])-&gt;fetchAll(); 
+</span>
+            <span class="s0">foreach ($sections as $section) { 
+                $this-&gt;arResult['SECTIONS'][$section['ID']] = $section; 
+                $newsIds = unserialize($section['UF_NEWS_LINK']); 
+                if ($newsIds) { 
+                    $this-&gt;arResult['NEWS'] = array_merge($this-&gt;arResult['NEWS'], $newsIds); 
+                } 
+            } 
+</span>
+            <span class="s0">$elements = ElementTable::getList([ 
+                'filter' =&gt; ['IBLOCK_ID' =&gt; $this-&gt;arParams['IBLOCK_ID'], 'ACTIVE' =&gt; 'Y'], 
+                'select' =&gt; ['ID', 'NAME', 'IBLOCK_SECTION_ID'] 
+            ])-&gt;fetchAll(); 
+</span>
+            <span class="s0">foreach ($elements as $element) { 
+                $this-&gt;arResult['ITEMS'][$element['IBLOCK_SECTION_ID']][] = $element; 
+            } 
+</span>
+            <span class="s0">$this-&gt;includeComponentTemplate(); 
+        } 
+    } 
+}</span></pre>
+</body>
+</html>
